@@ -1,0 +1,36 @@
+pragma solidity ^0.5.0;
+
+contract Voting {
+    
+    //mapping(address => mapping(address => uint256)) public delegatedVote;
+    
+    mapping(address => bool) public hashVote;
+    uint256 okResult;
+    uint256 koResult;
+    string _topic;
+    event votingFor(string topic);
+    
+    constructor(string memory topic) public{
+        topic = _topic;
+        emit votingFor(topic);
+    }
+    
+    function vote(bool result) public{
+        require(!hashVote[msg.sender]);
+        hashVote[msg.sender] = true;
+        if(result){
+            okResult += 1;
+        }else{
+            koResult +=1;
+        }
+    }
+    
+    function close() onlyOwner{
+        if(okResult > koResult){
+            finalCount = okResult;
+        }else if(okResult = koResult){
+            //otracosamariposa
+        }
+    }
+    
+}
