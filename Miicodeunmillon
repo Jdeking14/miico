@@ -1,0 +1,41 @@
+pragma solidity ^0.5.0;
+
+//import "browser/IERC20.sol";
+import "browser/Math.sol";
+
+contract miIco{
+    using SafeMath for uint256;
+    mapping (address => uint256) private _balances;
+    
+    uint256 public _totalSupply;
+    address public _owner;
+    uint256 public _price;
+    
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    
+    constructor(uint256 price) public{
+        _totalSupply = 1000000;
+        _balances[msg.sender] = _totalSupply;
+        _owner = msg.sender;
+        _price = price;
+    }
+    
+    function transfer(address _recipient, uint256 _amount) external returns(bool){
+        _transfer(msg.sender,_recipient,_amount);
+    }
+    
+     function _transfer(address sender, address recipient, uint256 amount) internal {
+        require(sender != address(0), "ERC20: transfer from the zero address");
+        require(recipient != address(0), "ERC20: transfer to the zero address");
+
+        _balances[sender] = _balances[sender].sub(amount);
+        _balances[recipient] = _balances[recipient].add(amount);
+        emit Transfer(sender, recipient, amount);
+    }
+    
+    function icoSell() external payable returns (bool){
+        _transfer(_owner,msg.sender,msg.value.div(_price));
+        return true;
+    }
+
+}
